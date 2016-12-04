@@ -24,6 +24,9 @@ var devMiddleware = require('webpack-dev-middleware')(compiler, {
   stats: {
     colors: true,
     chunks: false
+  },
+  watchOptions: {
+    poll: true
   }
 })
 

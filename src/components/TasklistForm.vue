@@ -3,19 +3,19 @@
     <h1>Create</h1>
     <form>
       <input type="text" v-model="title">
-      <taskItem v-for="taskItemData in taskItemsData" v-on:newTaskItem="addNewTaskItem" :subject="taskItemData.subject"></taskItem>
-      <input type="submit" value="Merken">
+      <task v-for="taskItemData in taskItemsData" v-on:newTaskItem="addNewTaskItem" :subject="taskItemData.subject"></task>
+      <input @click="newTasklist" @click.prevent.submit type="submit" value="Merken">
     </form>
   </div>
 </template>
 
 <script>
-import TaskItem from './TaskItem'
+import Task from './Task'
 
 export default {
   name: 'tasklist-form',
   components: {
-    TaskItem
+    Task
   },
   data: function () {
     return {
@@ -33,6 +33,13 @@ export default {
   methods: {
     addNewTaskItem: function () {
       this.taskItemsData.push({})
+    },
+    newTasklist: function () {
+      this.$http.post(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasklists', { title: 'Hello', description: 'Lorem Ipsum' }).then((response) => {
+        console.log(response)
+      }, (response) => {
+        console.log(response)
+      })
     }
   }
 }

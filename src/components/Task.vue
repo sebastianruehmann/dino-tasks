@@ -1,6 +1,6 @@
 <template>
   <div class="todo-item">
-    <input type="text" name="subject" v-on:keyup.enter="newTaskItem" v-on:blur="newTaskItem" :value="subject" v-model="subject" class="todo-item-subject" maxlength="140">
+    <input type="text" name="subject" v-on:keyup.enter="newTaskItem" v-on:blur="newTaskItem" v-model="subject" class="todo-item-subject" maxlength="140">
     <select v-model="state">
       <option v-for="state in states" :value="state.key">
         {{ state.text }}
@@ -14,13 +14,10 @@
 <script>
 export default {
   name: 'task-item',
-  props: {
-    subject: {
-      type: String
-    }
-  },
+  props: ['task'],
   data: function () {
     return {
+      subject: '',
       summary: '',
       state: 'todo',
       states: [
@@ -31,9 +28,23 @@ export default {
       ]
     }
   },
+  created: function () {
+    this.subject = this.task.subject
+  },
+  watch: {
+    'subject': function (val, oldVal) {
+      console.log(val, oldVal)
+    }
+  },
   methods: {
     newTaskItem: function () {
       this.$emit('newTaskItem')
+    },
+    saveTask: function () {
+      this.resource = this.$resource(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasklist{/id}/task')
+    },
+    editTask: function () {
+
     }
   }
 }

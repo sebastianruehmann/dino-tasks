@@ -2,10 +2,8 @@
   <div class="create-form">
     <h1>Create</h1>
     <form>
-      <input type="text" :value="title" v-model="title">
-      <task v-for="task in tasks" v-on:newTaskItem="addNewTaskItem" :subject="task.subject"></task>
-      <input v-if="form.add" @click="newTasklist" @click.prevent.submit type="submit" value="Speichern">
-      <input v-else @click="editTasklist" @click.prevent.submit type="submit" value="Bearbeiten">
+      <input type="text" class="tasklist-title" v-model="title" @blur="handleTasklistBlured">
+      <task v-for="task in tasks" v-on:newTaskItem="addNewTaskItem" :task="task"></task>
     </form>
   </div>
 </template>
@@ -20,32 +18,33 @@ export default {
   },
   data: function () {
     return {
-      form: {
-        add: true,
-        id: ''
-      },
+      id: null,
       title: '',
-      tasks: [{}]
+      tasks: null
     }
   },
   created: function () {
     this.resource = this.$resource(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasklist{/id}')
 
     this.fetchData()
+    this.id = this.$route.params.id
+  },
+  updated: function () {
+
   },
   watch: {
     '$route': 'fetchData'
   },
   methods: {
-    formMode: function () {
-      this.form.add = typeof this.$route.params.id === 'undefined'
+    handleTasklistBlured: function (e) {
+      if (typeof this.id === 'undefined' && e.target.value.length > 0) {
+        this.newTasklist()
+      }
     },
     fetchData: function () {
       const self = this
 
-      this.formMode()
-
-      if (!this.form.add) {
+      if (typeof this.id !== 'undefined') {
         this.resource.get({id: this.$route.params.id}).then((response) => {
           return response.json()
         }, (response) => {
@@ -54,7 +53,6 @@ export default {
           self.title = result.title
           self.tasks = result.tasks
           self.tasks.push({})
-          self.form.id = self.$route.params.id
         })
       } else {
         self.title = ''
@@ -65,14 +63,17 @@ export default {
       this.tasks.push({})
     },
     newTasklist: function () {
-      this.resource.save({ title: 'Hello', description: 'Lorem Ipsum' }).then((response) => {
-        console.log(response)
+      const self = this
+
+      this.$http.post(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasklists', { title: this.title, description: 'Lorem Ipsum' }).then((response) => {
+        self.$router.replace({name: 'tasklist.edit', params: { id: response.body._id }})
+        self.id = self.$route.params.id
       }, (response) => {
         console.log(response)
       })
     },
     editTasklist: function () {
-      this.resource.update({id: this.form.id}, { title: 'Hello', description: 'Lorem Ipsum' }).then((response) => {
+      this.resource.update({id: this.form.id}, { title: this.title, description: 'Lorem Ipsum' }).then((response) => {
         console.log(response)
       }, (response) => {
         console.log(response)
@@ -82,13 +83,12 @@ export default {
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="sass" scoped>
+  .tasklist-title
+    border: none;
+    font-size: 3rem;
+    color: #333;
+
+    &:focus
+     outline: none;
 </style>

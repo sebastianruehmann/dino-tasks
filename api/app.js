@@ -62,7 +62,18 @@ app.get(basePath + '/tasklists', function (req, res) {
 
             res.json(response);
         });
+})
 
+app.get(basePath + '/tasklist/:id', function (req, res) {
+    Tasklist.findOne({
+            '_id': req.params.id
+        })
+        .populate('tasks')
+        .exec(function (err, response) {
+            if( err ) throw err;
+
+            res.json(response);
+        });
 })
 
 app.post(basePath + '/tasklists', function (req, res) {

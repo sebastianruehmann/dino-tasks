@@ -18,13 +18,14 @@ var TasklistSchema = mongoose.Schema({
     },
     description: {
         type: String
-    },
-    tasks: [
-        { type: mongoose.Schema.Types.ObjectId, ref: 'Task' }
-    ]
+    }
 });
 
 var TaskSchema = mongoose.Schema({
+    _tasklistId: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Tasklist'
+    },
     subject: {
         type: String,
         required: true
@@ -60,25 +61,30 @@ app.use(function(req, res, next) {
 });
 
 app.get(basePath + '/tasklists', function (req, res) {
-    Tasklist.find({})
-        .limit(10)
-        .populate('tasks')
-        .exec(function (err, response) {
-            if( err ) throw err;
+    Tasklist.find({}, function (err, response) {
+        if( err ) throw err;
 
-            res.json(response);
-        });
+        res.json(response);
+    });
 })
 
 app.get(basePath + '/tasklist/:id', function (req, res) {
     Tasklist.findOne({
             '_id': req.params.id
-        })
-        .populate('tasks')
-        .exec(function (err, response) {
+        }, function (err, response) {
             if( err ) throw err;
 
-            res.json(response);
+            Task.find({
+                '_tasklistId': req.params.id
+            }).
+            select('-_tasklistId').
+            exec(function (err, tasksResponse) {
+                response = response.toJSON();
+                response.tasks = tasksResponse;
+
+                res.json(response);
+            });
+
         });
 })
 
@@ -102,6 +108,24 @@ app.post(basePath + '/tasklists', function (req, res) {
     });
 
     newTasklist.save(function (err, response) {
+        if( err ) throw err;
+
+        res.json(response);
+    })
+})
+
+app.post(basePath + '/tasklist/:id/tasks', function (req, res) {
+    const id = req.params.id;
+
+    const newTask = new Task({
+        _tasklistId: id,
+        subject: req.body.subject ? req.body.subject : '',
+        description: req.body.description,
+        state: req.body.state,
+        deadline: req.body.deadline
+    });
+
+    newTask.save(function (err, response) {
         if( err ) throw err;
 
         res.json(response);

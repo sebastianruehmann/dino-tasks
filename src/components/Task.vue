@@ -16,8 +16,7 @@ export default {
   name: 'task-item',
   props: {
     subject: {
-      type: String,
-      required: true
+      type: String
     }
   },
   data: function () {

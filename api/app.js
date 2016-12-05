@@ -50,7 +50,13 @@ app.listen(app.get('port'), function(){
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+
+    if ( req.method === 'OPTIONS' ) {
+        res.end();
+    } else {
+        next();
+    }
 });
 
 app.get(basePath + '/tasklists', function (req, res) {
@@ -74,6 +80,19 @@ app.get(basePath + '/tasklist/:id', function (req, res) {
 
             res.json(response);
         });
+})
+
+app.put(basePath + '/tasklist/:id', function (req, res) {
+    Tasklist.findByIdAndUpdate(req.params.id, {
+        $set: {
+            title: req.body.title,
+            description: req.body.description
+        }
+    }, function (err, response) {
+        if( err ) throw err;
+
+        res.json(response);
+    })
 })
 
 app.post(basePath + '/tasklists', function (req, res) {

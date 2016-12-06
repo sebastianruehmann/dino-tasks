@@ -1,13 +1,15 @@
 <template>
-  <div class="todo-item">
-    <input type="text" name="subject" v-on:keyup.enter="blurredTaskItem" v-on:blur="blurredTaskItem" v-model="subject" class="todo-item-subject" maxlength="140">
-    <select v-model="state">
-      <option v-for="state in states" :value="state.key">
-        {{ state.text }}
-      </option>
-    </select>
-    <textarea v-model="description"></textarea>
-    <p>Write a summary for this Task. You can use @mention, dates and states. As well as Links and Embeds</p>
+  <div class="task">
+    <input type="text" :placeholder="placeholder" name="subject" v-on:keyup.enter="blurredTaskItem" v-on:blur="blurredTaskItem" v-model="subject" class="task-subject" maxlength="140">
+    <div class="task-expand">
+      <select v-model="state">
+        <option v-for="state in states" :value="state.key">
+          {{ state.text }}
+        </option>
+      </select>
+      <textarea v-model="description"></textarea>
+      <p>Write a summary for this Task. You can use @mention, dates and states. As well as Links and Embeds</p>
+    </div>
   </div>
 </template>
 
@@ -27,6 +29,10 @@ export default {
         {text: 'In-Progress', key: 'progress'},
         {text: 'Complete', key: 'complete'},
         {text: 'Canceled', key: 'canceled'}
+      ],
+      placeholder: '',
+      placeholders: [
+        'What to do?', 'Type..', 'Everything ready?', 'Roaw..'
       ]
     }
   },
@@ -35,6 +41,7 @@ export default {
     this.subject = this.task.subject
     this.description = this.task.description
     this.state = this.task.state ? this.task.state : 'todo'
+    this.placeholder = this.placeholders[Math.floor(Math.random() * this.placeholders.length)]
   },
   watch: {
 
@@ -72,12 +79,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="sass" scoped>
-.todo-item
-  .todo-item-subject
+.task
+  .task-subject
     border: none;
     font-size: 2rem;
     color: #333;
 
     &:focus
       outline: none;
+
+  .task-expand
+
 </style>

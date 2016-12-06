@@ -1,6 +1,6 @@
 <template>
   <div class="form">
-    <form v-on:submit.prevent="onSubmit">
+    <form v-on:submit.prevent="handleTasklistBlured">
       <input placeholder="List Title" type="text" class="tasklist-title" v-model="title" @keyup.enter="handleTasklistBlured" @blur="handleTasklistBlured">
       <task v-for="task in tasks" v-on:editBlurredNewTask="addNewTask" :tasklistId="id" :task="task"></task>
     </form>

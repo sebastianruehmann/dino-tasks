@@ -1,8 +1,7 @@
 <template>
-  <div class="create-form">
-    <h1>Create</h1>
+  <div class="form">
     <form>
-      <input type="text" class="tasklist-title" v-model="title" @blur="handleTasklistBlured">
+      <input placeholder="List Title" type="text" class="tasklist-title" v-model="title" @blur="handleTasklistBlured">
       <task v-for="task in tasks" v-on:newTaskItem="addNewTaskItem" :tasklistId="id" :task="task"></task>
     </form>
   </div>
@@ -88,6 +87,7 @@ export default {
     border: none;
     font-size: 3rem;
     color: #333;
+    width: 100%;
 
     &:focus
      outline: none;

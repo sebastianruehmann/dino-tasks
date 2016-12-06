@@ -2,13 +2,15 @@
   <div class="task">
     <input type="text" :placeholder="placeholder" name="subject" v-on:keyup.enter="blurredTaskItem" v-on:blur="blurredTaskItem" v-model="subject" class="task-subject" maxlength="140">
     <div class="task-expand">
-      <select v-model="state">
+      <select v-model="state" class="task-expand-state">
         <option v-for="state in states" :value="state.key">
           {{ state.text }}
         </option>
       </select>
-      <textarea v-model="description"></textarea>
-      <p>Write a summary for this Task. You can use @mention, dates and states. As well as Links and Embeds</p>
+      <div class="task-expand-description">
+        <textarea placeholder="Description.." v-model="description"></textarea>
+        <p class="task-expand-description-notice">Write a summary for this Task. You can use @mention, dates and states. As well as Links and Embeds</p>
+      </div>
     </div>
   </div>
 </template>
@@ -80,14 +82,37 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="sass" scoped>
 .task
+  width: 100%;
+
   .task-subject
     border: none;
     font-size: 2rem;
     color: #333;
+    width: 100%;
 
     &:focus
       outline: none;
 
   .task-expand
+    .task-expand-state
+      border: none;
+      border-radius: 0;
+      border-bottom: 3px solid #333;
+      float: right;
+      font-size: 1rem;
+      margin: 0.5rem 0 1rem 0;
+      padding: 0.2rem;
 
+    .task-expand-description
+      textarea
+        background: #efefef;
+        border: none;
+        box-sizing: border-box;
+        font-size: 0.8rem;
+        min-height: 100px;
+        padding: 0.4rem 0;
+        resize: none;
+        width: 100%;
+      .task-expand-description-notice
+        font-size: 0.4rem;
 </style>

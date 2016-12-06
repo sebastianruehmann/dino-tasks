@@ -1,6 +1,6 @@
 <template>
   <div class="todo-item">
-    <input type="text" name="subject" v-on:keyup.enter="newTaskItem" v-on:blur="newTaskItem" v-model="subject" class="todo-item-subject" maxlength="140">
+    <input type="text" name="subject" v-on:keyup.enter="blurredTaskItem" v-on:blur="blurredTaskItem" v-model="subject" class="todo-item-subject" maxlength="140">
     <select v-model="state">
       <option v-for="state in states" :value="state.key">
         {{ state.text }}
@@ -31,6 +31,7 @@ export default {
     }
   },
   created: function () {
+    this.id = this.task._id
     this.subject = this.task.subject
     this.description = this.task.description
     this.state = this.task.state ? this.task.state : 'todo'
@@ -39,7 +40,7 @@ export default {
 
   },
   methods: {
-    newTaskItem: function (e) {
+    blurredTaskItem: function (e) {
       if (e.target.value.length > 0) {
         if (typeof this.id !== 'undefined') {
           this.editTask()
@@ -52,14 +53,18 @@ export default {
     saveTask: function () {
       const self = this
       this.$http.post(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasks', {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state}).then((response) => {
-        console.log('saved: ' + response.body._id)
+        console.log('created: ' + response.body._id)
         self.id = response.body._id
       }, (response) => {
         console.log(response)
       })
     },
     editTask: function () {
-
+      this.$http.put(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/task/' + this.id, {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state}).then((response) => {
+        console.log('saved: ' + response.body._id)
+      }, (response) => {
+        console.log(response)
+      })
     }
   }
 }

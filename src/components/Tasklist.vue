@@ -39,6 +39,7 @@
   .tasklist-title
     margin: 0.1rem 0 0;
   .tasklist-description
+    display: none;
     margin: 0;
   .tasklist-edit
     position: absolute;

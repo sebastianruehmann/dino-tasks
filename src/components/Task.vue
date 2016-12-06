@@ -22,7 +22,6 @@ export default {
   data: function () {
     return {
       id: undefined,
-      tasklistId: undefined,
       subject: '',
       description: '',
       state: 'todo',
@@ -44,9 +43,6 @@ export default {
     this.description = this.task.description
     this.state = this.task.state ? this.task.state : 'todo'
     this.placeholder = this.placeholders[Math.floor(Math.random() * this.placeholders.length)]
-  },
-  watch: {
-
   },
   methods: {
     blurredTaskItem: function (e) {
@@ -102,7 +98,10 @@ export default {
       font-size: 1rem;
       margin: 0.5rem 0 1rem 0;
       padding: 0.2rem;
+      -webkit-appearance: none;
 
+      &:focus
+       outline: none;
     .task-expand-description
       textarea
         background: #efefef;
@@ -113,6 +112,9 @@ export default {
         padding: 0.4rem 0;
         resize: none;
         width: 100%;
+
+        &:focus
+         outline: none;
       .task-expand-description-notice
         font-size: 0.4rem;
 </style>

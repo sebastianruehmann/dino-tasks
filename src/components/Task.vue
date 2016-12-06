@@ -34,7 +34,7 @@ export default {
       editRunning: false,
       placeholder: '',
       placeholders: [
-        'What to do?', 'Type..', 'Everything ready?', 'Roaw..'
+        'What to do?', 'Type..', 'Everything ready? No..?', 'Roaw..'
       ]
     }
   },

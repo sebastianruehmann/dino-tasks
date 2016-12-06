@@ -1,14 +1,14 @@
 <template>
   <div class="task">
-    <input type="text" :placeholder="placeholder" name="subject" v-on:keyup.enter="blurredTaskItem" v-on:blur="blurredTaskItem" v-model="subject" class="task-subject" maxlength="140">
+    <input type="text" :placeholder="placeholder" name="subject" @change="handleDataChanged" @keyup.enter="blurredTaskHeadline" @blur="blurredTaskHeadline" v-model="subject" class="task-subject" maxlength="140">
     <div class="task-expand">
-      <select v-model="state" class="task-expand-state">
+      <select @change="handleDataChanged" v-model="state" class="task-expand-state">
         <option v-for="state in states" :value="state.key">
           {{ state.text }}
         </option>
       </select>
       <div class="task-expand-description">
-        <textarea placeholder="Description.." v-model="description"></textarea>
+        <textarea @change="handleDataChanged" placeholder="Description.." v-model="description"></textarea>
         <p class="task-expand-description-notice">Write a summary for this Task. You can use @mention, dates and states. As well as Links and Embeds</p>
       </div>
     </div>
@@ -31,6 +31,7 @@ export default {
         {text: 'Complete', key: 'complete'},
         {text: 'Canceled', key: 'canceled'}
       ],
+      editRunning: false,
       placeholder: '',
       placeholders: [
         'What to do?', 'Type..', 'Everything ready?', 'Roaw..'
@@ -45,11 +46,9 @@ export default {
     this.placeholder = this.placeholders[Math.floor(Math.random() * this.placeholders.length)]
   },
   methods: {
-    blurredTaskItem: function (e) {
+    blurredTaskHeadline: function (e) {
       if (e.target.value.length > 0) {
-        if (typeof this.id !== 'undefined') {
-          this.editTask()
-        } else {
+        if (typeof this.id === 'undefined') {
           this.saveTask()
         }
         this.$emit('newTaskItem')
@@ -63,6 +62,16 @@ export default {
       }, (response) => {
         console.log(response)
       })
+    },
+    handleDataChanged: function () {
+      const self = this
+      if (!this.editRunning) {
+        this.editRunning = true
+        setTimeout(function () {
+          self.editRunning = false
+          self.editTask()
+        }, 1000)
+      }
     },
     editTask: function () {
       this.$http.put(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/task/' + this.id, {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state}).then((response) => {

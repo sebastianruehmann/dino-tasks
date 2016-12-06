@@ -13,10 +13,12 @@
 
 <script>
 export default {
-  name: 'task-item',
-  props: ['task'],
+  name: 'task',
+  props: ['task', 'tasklistId'],
   data: function () {
     return {
+      id: undefined,
+      tasklistId: undefined,
       subject: '',
       summary: '',
       state: 'todo',
@@ -37,11 +39,25 @@ export default {
     }
   },
   methods: {
-    newTaskItem: function () {
-      this.$emit('newTaskItem')
+    newTaskItem: function (e) {
+      console.log(this.id)
+      if (typeof this.id !== 'undefined') {
+        this.editTask()
+      } else {
+        this.saveTask()
+      }
+      if (e.target.value.length > 0) {
+        this.$emit('newTaskItem')
+      }
     },
     saveTask: function () {
-      this.resource = this.$resource(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasklist{/id}/task')
+      const self = this
+      this.$http.post(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasks', {_tasklistId: this.tasklistId, subject: this.subject, summary: this.summary, state: this.state}).then((response) => {
+        console.log('saved: ' + response.body._id)
+        self.id = response.body._id
+      }, (response) => {
+        console.log(response)
+      })
     },
     editTask: function () {
 

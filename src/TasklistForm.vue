@@ -3,7 +3,7 @@
     <h1>Create</h1>
     <form>
       <input type="text" class="tasklist-title" v-model="title" @blur="handleTasklistBlured">
-      <task v-for="task in tasks" v-on:newTaskItem="addNewTaskItem" :task="task"></task>
+      <task v-for="task in tasks" v-on:newTaskItem="addNewTaskItem" :tasklistId="id" :task="task"></task>
     </form>
   </div>
 </template>

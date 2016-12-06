@@ -1,7 +1,7 @@
 <template>
   <div class="form">
-    <form>
-      <input placeholder="List Title" type="text" class="tasklist-title" v-model="title" @blur="handleTasklistBlured">
+    <form v-on:submit.prevent="onSubmit">
+      <input placeholder="List Title" type="text" class="tasklist-title" v-model="title" @keyup.enter="handleTasklistBlured" @blur="handleTasklistBlured">
       <task v-for="task in tasks" v-on:editBlurredNewTask="addNewTask" :tasklistId="id" :task="task"></task>
     </form>
   </div>

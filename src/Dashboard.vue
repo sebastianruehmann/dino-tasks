@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <h1>Dashboard</h1>
+    <p>Here you find an overview of all your created Tasklist:</p>
     <tasklist v-for="tasklist in tasklists" :tasklist="tasklist"></tasklist>
   </div>
 </template>

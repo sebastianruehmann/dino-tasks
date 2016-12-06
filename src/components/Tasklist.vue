@@ -1,9 +1,11 @@
 <template>
-  <div class="tasklist">
-    <h2 class="tasklist-title">{{ title }}</h2>
-    <p class="tasklist-description">{{ description }}</p>
-    <router-link class="tasklist-edit" :to="tasklistLink">Show</router-link>
-  </div>
+  <router-link :to="tasklistLink">
+    <div class="tasklist">
+      <h2 class="tasklist-title">{{ title }}</h2>
+      <p class="tasklist-description">{{ description }}</p>
+      <span class="tasklist-edit">Show</span>
+    </div>
+  </router-link>
 </template>
 
 <script>
@@ -30,27 +32,29 @@
     }
   }
 </script>
-<style lang="sass">
+<style lang="sass" scoped>
+  a
+    text-decoration: none;
   .tasklist
-    border-bottom: 1px solid #333;
-    padding: 0.3rem 0;
+    background: #efefef;
+    padding: 0.3rem;
     margin: 0.1rem 0;
     position: relative;
-  .tasklist-title
-    border: none;
-    margin: 0rem;
-    font-size: 1.7rem;
-    color: #333;
-    width: 100%;
-  .tasklist-description
-    display: none;
-    margin: 0;
-  .tasklist-edit
-    position: absolute;
-    bottom: 0.5rem;
-    right: 0;
-    background: #333;
-    color: white;
-    text-decoration: none;
-    padding: 0.3rem;
+    .tasklist-title
+      border: none;
+      margin: 0rem;
+      font-size: 1.7rem;
+      color: #333;
+      width: 100%;
+    .tasklist-description
+      display: none;
+      margin: 0;
+    .tasklist-edit
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.5rem;
+      background: #333;
+      color: white;
+      text-decoration: none;
+      padding: 0.3rem;
 </style>

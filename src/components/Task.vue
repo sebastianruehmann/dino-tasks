@@ -6,7 +6,7 @@
         {{ state.text }}
       </option>
     </select>
-    <textarea v-model="summary"></textarea>
+    <textarea v-model="description"></textarea>
     <p>Write a summary for this Task. You can use @mention, dates and states. As well as Links and Embeds</p>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
       id: undefined,
       tasklistId: undefined,
       subject: '',
-      summary: '',
+      description: '',
       state: 'todo',
       states: [
         {text: 'To Do', key: 'todo'},
@@ -32,27 +32,26 @@ export default {
   },
   created: function () {
     this.subject = this.task.subject
+    this.description = this.task.description
+    this.state = this.task.state ? this.task.state : 'todo'
   },
   watch: {
-    'subject': function (val, oldVal) {
-      console.log(val, oldVal)
-    }
+
   },
   methods: {
     newTaskItem: function (e) {
-      console.log(this.id)
-      if (typeof this.id !== 'undefined') {
-        this.editTask()
-      } else {
-        this.saveTask()
-      }
       if (e.target.value.length > 0) {
+        if (typeof this.id !== 'undefined') {
+          this.editTask()
+        } else {
+          this.saveTask()
+        }
         this.$emit('newTaskItem')
       }
     },
     saveTask: function () {
       const self = this
-      this.$http.post(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasks', {_tasklistId: this.tasklistId, subject: this.subject, summary: this.summary, state: this.state}).then((response) => {
+      this.$http.post(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasks', {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state}).then((response) => {
         console.log('saved: ' + response.body._id)
         self.id = response.body._id
       }, (response) => {

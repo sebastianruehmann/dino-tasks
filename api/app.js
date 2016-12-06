@@ -79,6 +79,7 @@ app.get(basePath + '/tasklist/:id', function (req, res) {
                 '_tasklistId': req.params.id
             }).
             select('-_tasklistId').
+            sort('subject').
             exec(function (err, tasksResponse) {
                 response = response.toJSON();
                 response.tasks = tasksResponse;

@@ -34,7 +34,8 @@ var TaskSchema = mongoose.Schema({
         type: String
     },
     state: {
-        type: String
+        type: String,
+        enum: ['todo', 'progress', 'complete', 'canceled']
     },
     deadline: {
         type: Date

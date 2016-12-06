@@ -2,7 +2,7 @@
   <div class="form">
     <form>
       <input placeholder="List Title" type="text" class="tasklist-title" v-model="title" @blur="handleTasklistBlured">
-      <task v-for="task in tasks" v-on:newTaskItem="addNewTaskItem" :tasklistId="id" :task="task"></task>
+      <task v-for="task in tasks" v-on:editBlurredNewTask="addNewTask" :tasklistId="id" :task="task"></task>
     </form>
   </div>
 </template>
@@ -58,7 +58,7 @@ export default {
         self.tasks = [{}]
       }
     },
-    addNewTaskItem: function () {
+    addNewTask: function () {
       this.tasks.push({})
     },
     newTasklist: function () {

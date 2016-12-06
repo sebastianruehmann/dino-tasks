@@ -1,6 +1,6 @@
 <template>
   <div class="task">
-    <input type="text" :placeholder="placeholder" name="subject" @change="handleDataChanged" @keyup.enter="blurredTaskHeadline" @blur="blurredTaskHeadline" v-model="subject" class="task-subject" maxlength="140">
+    <input type="text" :placeholder="placeholder" name="subject" @change="handleDataChanged" @keyup.enter="blurredTaskHeadline" v-on:blur="blurredTaskHeadline" v-model="subject" class="task-subject" maxlength="140">
     <div class="task-expand">
       <select @change="handleDataChanged" v-model="state" class="task-expand-state">
         <option v-for="state in states" :value="state.key">
@@ -50,8 +50,8 @@ export default {
       if (e.target.value.length > 0) {
         if (typeof this.id === 'undefined') {
           this.saveTask()
+          this.$emit('editBlurredNewTask')
         }
-        this.$emit('newTaskItem')
       }
     },
     saveTask: function () {

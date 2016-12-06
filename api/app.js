@@ -115,7 +115,6 @@ app.post(basePath + '/tasklists', function (req, res) {
 })
 
 app.post(basePath + '/tasks', function (req, res) {
-
     const newTask = new Task({
         _tasklistId: req.body._tasklistId,
         subject: req.body.subject ? req.body.subject : '',
@@ -125,6 +124,27 @@ app.post(basePath + '/tasks', function (req, res) {
     });
 
     newTask.save(function (err, response) {
+        if( err ) throw err;
+
+        res.json(response);
+    })
+})
+
+app.put(basePath + '/task/:id', function (req, res) {
+    const query = {
+        subject: req.body.subject ? req.body.subject : '',
+        description: req.body.description,
+        state: req.body.state,
+        deadline: req.body.deadline
+    }
+
+    if(typeof req.body._tasklistId !== 'undefined') {
+        query._tasklistId = req.body._tasklistId
+    }
+
+    Task.findByIdAndUpdate(req.params.id, {
+        $set: query
+    }, function (err, response) {
         if( err ) throw err;
 
         res.json(response);

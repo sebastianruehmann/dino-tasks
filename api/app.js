@@ -115,10 +115,9 @@ app.post(basePath + '/tasklists', function (req, res) {
 })
 
 app.post(basePath + '/tasks', function (req, res) {
-    const id = req.params.id;
-
+    
     const newTask = new Task({
-        _tasklistId: id,
+        _tasklistId: req.params._tasklistId,
         subject: req.body.subject ? req.body.subject : '',
         description: req.body.description,
         state: req.body.state,

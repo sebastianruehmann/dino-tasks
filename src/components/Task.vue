@@ -91,7 +91,7 @@ export default {
 
   .task-subject
     border: none;
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: #333;
     width: 100%;
 
@@ -116,14 +116,15 @@ export default {
         background: #efefef;
         border: none;
         box-sizing: border-box;
-        font-size: 0.8rem;
+        font-size: 1rem;
         min-height: 100px;
         padding: 0.4rem 0;
         resize: none;
         width: 100%;
 
         &:focus
-         outline: none;
+          background: #fbfbfb;
+          outline: none;
       .task-expand-description-notice
         font-size: 0.4rem;
 </style>

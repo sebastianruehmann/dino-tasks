@@ -37,7 +37,11 @@
     margin: 0.1rem 0;
     position: relative;
   .tasklist-title
-    margin: 0.1rem 0 0;
+    border: none;
+    margin: 0rem;
+    font-size: 1.7rem;
+    color: #333;
+    width: 100%;
   .tasklist-description
     display: none;
     margin: 0;

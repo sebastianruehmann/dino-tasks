@@ -85,7 +85,8 @@ export default {
 <style lang="sass" scoped>
   .tasklist-title
     border: none;
-    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-size: 2.7rem;
     color: #333;
     width: 100%;
 

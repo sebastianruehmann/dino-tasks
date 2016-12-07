@@ -22,9 +22,6 @@ export default {
   created: function () {
     this.fetchData()
   },
-  updated: function (val) {
-    console.log(val)
-  },
   watch: {
     '$route': 'fetchData'
   },

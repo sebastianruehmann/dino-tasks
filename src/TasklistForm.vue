@@ -17,7 +17,7 @@ export default {
   },
   data: function () {
     return {
-      id: null,
+      id: undefined,
       title: '',
       tasks: null
     }
@@ -25,8 +25,8 @@ export default {
   created: function () {
     this.resource = this.$resource(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasklist{/id}')
 
-    this.fetchData()
     this.id = this.$route.params.id
+    this.fetchData()
   },
   updated: function () {
 
@@ -55,7 +55,6 @@ export default {
         })
       } else {
         self.title = ''
-        self.tasks = [{}]
       }
     },
     addNewTask: function () {

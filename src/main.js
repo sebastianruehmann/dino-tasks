@@ -9,7 +9,7 @@ Vue.use(VueRouter)
 Vue.use(VueResource)
 
 const routes = [
-  { path: '/dashboard', name: 'dashboard', component: Dashboard },
+  { path: '/', name: 'dashboard', component: Dashboard },
   { path: '/tasklist/add', name: 'tasklist.add', component: TasklistForm },
   { path: '/tasklist/:id', name: 'tasklist.edit', component: TasklistForm }
 ]

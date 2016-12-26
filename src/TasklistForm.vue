@@ -1,10 +1,5 @@
 <template>
   <div class="form">
-    <header>
-      <router-link to="/">
-        <img class="logo" src="./assets/logo.svg">
-      </router-link>
-    </header>
     <form class="wrapped" v-on:submit.prevent="handleTasklistBlured">
       <input placeholder="List Title" type="text" class="tasklist-title" v-model="title" @keyup.enter="handleTasklistBlured" @blur="handleTasklistBlured">
       <task v-for="task in tasks" v-on:editBlurredNewTask="addNewTask" :tasklistId="id" :task="task"></task>

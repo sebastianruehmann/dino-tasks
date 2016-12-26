@@ -1,10 +1,5 @@
 <template>
   <div class="dashboard">
-    <header>
-      <router-link to="/">
-        <img class="logo" src="./assets/logo.svg">
-      </router-link>
-    </header>
     <a class="button button-add button-full-width" href="/#/tasklist/add">
       +
     </a>
@@ -51,26 +46,8 @@ export default {
 <style lang="sass">
 @import "scss/globals"
 
-body, html
-  margin: 0;
-  padding: 0;
-
-#app
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: $grey;
-  text-align: left;
-
-header
-  padding: 0.2rem;
-
-
 .notice
   font-size: 0.8rem;
-
-.logo
-  width: 40vw;
 
 .wrapped
   padding: 0 0.5rem;

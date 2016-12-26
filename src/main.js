@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 
+import App from './App.vue'
 import TasklistForm from './TasklistForm.vue'
 import Dashboard from './Dashboard.vue'
 
@@ -18,7 +19,9 @@ const router = new VueRouter({
   routes
 })
 
-/* eslint-disable no-new */
 new Vue({
+  components: {
+    App
+  },
   router
 }).$mount('#app')

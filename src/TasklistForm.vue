@@ -43,6 +43,8 @@ export default {
     handleTasklistBlured: function (e) {
       if (typeof this.id === 'undefined' && e.target.value.length > 0) {
         this.newTasklist()
+      } else {
+        this.editTasklist()
       }
     },
     fetchData: function () {
@@ -77,8 +79,7 @@ export default {
       })
     },
     editTasklist: function () {
-      this.resource.update({id: this.form.id}, { title: this.title, description: 'Lorem Ipsum' }).then((response) => {
-        console.log(response)
+      this.resource.update({id: this.id}, { title: this.title, description: 'Lorem Ipsum' }).then((response) => {
       }, (response) => {
         console.log(response)
       })

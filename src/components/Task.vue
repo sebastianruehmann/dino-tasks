@@ -8,7 +8,14 @@
         </option>
       </select>
       <div class="task-expand-description">
-        <textarea @change="handleDataChanged" placeholder="Description.." v-model="description"></textarea>
+        <textarea @change="handleDataChanged" @keyup="handleChangeCursorPosition" @focus="handleChangeCursorPosition" @click="handleChangeCursorPosition" placeholder="Description.." v-model="description"></textarea>
+        <Modal v-if="suggestions.length > 0">
+          <ul slot="content" class="suggestions">
+            <li class="suggestions-item" v-for="suggestion in suggestions">
+              <a href="">{{ suggestion }}</a>
+            </li>
+          </ul>
+        </Modal>
         <p class="task-expand-description-notice notice">Write a summary for this Task. You can use @mention, dates and states. As well as Links and Embeds</p>
       </div>
     </div>
@@ -16,6 +23,9 @@
 </template>
 
 <script>
+import RichMediaDescription from './../mixins/RichMediaDescription'
+import Modal from './Modal'
+
 export default {
   name: 'task',
   props: ['task', 'tasklistId'],
@@ -45,6 +55,10 @@ export default {
     this.state = this.task.state ? this.task.state : 'todo'
     this.placeholder = this.placeholders[Math.floor(Math.random() * this.placeholders.length)]
   },
+  components: {
+    Modal
+  },
+  mixins: [RichMediaDescription],
   mounted: function () {
     this.changeState()
   },
@@ -109,9 +123,26 @@ export default {
 <style lang="sass" scoped>
   @import "../scss/globals"
 
+  .suggestions
+    border-radius: 3px;
+    border: 1px solid $lightgrey;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    .suggestions-item
+      &:first-child a
+        padding-top: 0.7rem;
+      a
+        color: $grey;
+        display: block;
+        font-size: 0.9rem;
+        padding: 0 0.4rem 0.7rem;
+        text-decoration: none;
+
   .task
     border-bottom: 5px solid $lightgrey;
     padding: 1rem 0;
+    position: relative;
     width: 100%;
 
     .task-subject
@@ -147,13 +178,15 @@ export default {
           font-size: 1rem;
           color: $grey;
           min-height: 100px;
-          padding: 0.4rem 0;
+          padding: 0.4rem;
           resize: none;
           width: 100%;
 
           &:focus
             background: #fbfbfb;
             outline: none;
+        .modal
+          width: 100%;
         .task-expand-description-notice
           margin-bottom: 0;
 </style>

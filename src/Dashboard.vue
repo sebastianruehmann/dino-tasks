@@ -1,8 +1,17 @@
 <template>
-  <div id="app">
-    <h1>Dashboard</h1>
-    <p>Here you find an overview of all your created Tasklist:</p>
-    <tasklist v-for="tasklist in tasklists" :tasklist="tasklist"></tasklist>
+  <div class="dashboard">
+    <header>
+      <router-link to="/">
+        <img class="logo" src="./assets/logo.svg">
+      </router-link>
+    </header>
+    <a class="button button-add button-full-width" href="/#/tasklist/add">
+      +
+    </a>
+    <p class="wrapped notice">Here you find an overview of all your created Tasklist:</p>
+    <div class="tasklist-overview">
+      <tasklist v-for="tasklist in tasklists" :tasklist="tasklist"></tasklist>
+    </div>
   </div>
 </template>
 
@@ -40,11 +49,40 @@ export default {
 </script>
 
 <style lang="sass">
+@import "scss/globals"
+
+body, html
+  margin: 0;
+  padding: 0;
+
 #app
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  margin-top: 60px;
+  color: $grey;
   text-align: left;
+
+header
+  padding: 0.2rem;
+
+
+.notice
+  font-size: 0.8rem;
+
+.logo
+  width: 40vw;
+
+.wrapped
+  padding: 0 0.5rem;
+
+.button
+  color: white;
+  font-size: 1.7rem;
+  font-weight: bold;
+  padding: 10px;
+  text-decoration: none;
+  &.button-add
+    background: $green;
+  &.button-full-width
+    display: block;
 </style>

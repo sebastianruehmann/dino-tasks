@@ -1,11 +1,12 @@
 <template>
-
-    <div class="tasklist">
-      <h2 class="tasklist-title">{{ title }}</h2>
-      <p class="tasklist-description">{{ description }}</p>
-      <router-link :to="tasklistPrint" class="tasklist-print">Print</router-link>
-      <router-link :to="tasklistLink" class="tasklist-edit">Show</router-link>
+  <div class="tasklist">
+    <h2 class="tasklist-title">{{ title }}</h2>
+    <p class="tasklist-description">{{ description }}</p>
+    <div class="bar bar-right">
+      <router-link :to="tasklistPrint" class="button button-print"><img src="./../assets/print.svg"></router-link>
+      <router-link :to="tasklistLink" class="button button-edit"><img src="./../assets/view.svg"></router-link>
     </div>
+  </div>
 </template>
 
 <script>
@@ -35,37 +36,48 @@
     }
   }
 </script>
+
 <style lang="sass" scoped>
-  a
-    text-decoration: none;
+  @import "../scss/globals"
+
   .tasklist
-    background: #efefef;
-    padding: 0.3rem;
-    margin: 0.1rem 0;
+    border-bottom: 1px solid $lightgrey;
     position: relative;
+
+    &:first-child
+      border-top: 1px solid $lightgrey;
     .tasklist-title
       border: none;
       margin: 0rem;
       font-size: 1.7rem;
-      color: #333;
-      width: 100%;
+      color: $grey;
+      padding: 0.5rem;
     .tasklist-description
       display: none;
       margin: 0;
-    .tasklist-edit
+    .bar
       position: absolute;
-      bottom: 0.5rem;
-      right: 0.5rem;
-      background: #333;
+      top: 0;
+      &.bar-right
+        right: 0;
+      &.bar-left
+        left: 0;
+      .button
+        float: left;
+    .button
       color: white;
+      font-size: 1.7rem;
+      font-weight: bold;
+      padding: 10px;
       text-decoration: none;
-      padding: 0.3rem;
-    .tasklist-print
-      position: absolute;
-      bottom: 0.5rem;
-      right: 4.5rem;
-      background: #333;
-      color: white;
-      text-decoration: none;
-      padding: 0.3rem;
+      &.button-print
+        background: $purple;
+      &.button-edit
+        background: $orange;
+      &.button-print,
+      &.button-edit
+        height: 33px;
+        img
+          height: 100%;
+          width: auto;
 </style>

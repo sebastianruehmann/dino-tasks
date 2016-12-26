@@ -1,5 +1,10 @@
 <template>
-  <div class="form">
+  <div class="form wrapped">
+    <header>
+      <router-link to="/">
+        <img class="logo" src="./assets/logo.svg">
+      </router-link>
+    </header>
     <form v-on:submit.prevent="handleTasklistBlured">
       <input placeholder="List Title" type="text" class="tasklist-title" v-model="title" @keyup.enter="handleTasklistBlured" @blur="handleTasklistBlured">
       <task v-for="task in tasks" v-on:editBlurredNewTask="addNewTask" :tasklistId="id" :task="task"></task>
@@ -65,7 +70,8 @@ export default {
 
       this.$http.post(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasklists', { title: this.title, description: 'Lorem Ipsum' }).then((response) => {
         self.$router.replace({name: 'tasklist.edit', params: { id: response.body._id }})
-        self.id = self.$route.params.id
+        self.id = response.body._id
+        document.getElementsByClassName('task-subject')[0].focus()
       }, (response) => {
         console.log(response)
       })
@@ -82,11 +88,14 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+  @import "scss/globals";
+
   .tasklist-title
     border: none;
+    border-bottom: 1px solid $lightgrey;
     margin-bottom: 1rem;
-    font-size: 2.7rem;
-    color: #333;
+    font-size: 1.6rem;
+    color: $grey;
     width: 100%;
 
     &:focus

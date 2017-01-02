@@ -134,7 +134,7 @@ app.post(basePath + '/tasks', function (req, res) {
 
 app.put(basePath + '/task/:id', function (req, res) {
     const query = {
-        subject: req.body.subject ? req.body.subject : '',
+        subject: req.body.subject,
         description: req.body.description,
         state: req.body.state,
         deadline: req.body.deadline

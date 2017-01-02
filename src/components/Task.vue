@@ -2,39 +2,41 @@
   <div class="task">
     <input type="text" :placeholder="placeholder" name="subject" @change="handleDataChanged" @keyup.enter="blurredTaskHeadline" v-on:blur="blurredTaskHeadline" v-model="subject" class="task-subject" maxlength="140">
     <div class="task-expand">
-      <select @change="handleStateDataChanged" @blur="changeState" v-model="state" class="task-expand-state">
+      <select @change="handleStateDataChanged" v-model="state" class="task-expand-state">
         <option v-for="state in states" :value="state.key">
           {{ state.text }}
         </option>
       </select>
       <div class="task-expand-description">
-        <textarea @change="handleDataChanged" @keyup="handleChangeCursorPosition" @focus="handleChangeCursorPosition" @click="handleChangeCursorPosition" placeholder="Description.." v-model="description"></textarea>
-        <Modal v-if="suggestions.length > 0">
-          <ul slot="content" class="suggestions">
-            <li class="suggestions-item" v-for="suggestion in suggestions">
-              <a href="">{{ suggestion }}</a>
-            </li>
-          </ul>
+        <textarea @change="handleDataChanged" @keyup="handleChangeCursorPosition" @focus="handleChangeCursorPosition" @blur="handleBlur" @click="handleChangeCursorPosition" placeholder="Description.." v-model="description"></textarea>
+        <Modal v-if="currentFocusedWordType !== null">
+          <Suggestions slot="content" :commandWord="currentFocusedWord" :type="currentFocusedWordType"></Suggestions>
         </Modal>
         <p class="task-expand-description-notice notice">Write a summary for this Task. You can use @mention, dates and states. As well as Links and Embeds</p>
+      </div>
+      <div class="task-expand-deadline">
+        Deadline: {{ deadlineDate }}
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import RichMediaDescription from './../mixins/RichMediaDescription'
+import textSensibleCommands from './../mixins/textSensibleCommands'
 import Modal from './Modal'
+import Suggestions from './suggestions'
+import moment from 'moment'
 
 export default {
   name: 'task',
   props: ['task', 'tasklistId'],
   data: function () {
     return {
-      id: undefined,
-      subject: '',
-      description: '',
-      state: 'todo',
+      id: this.task._id,
+      subject: this.task.subject,
+      description: this.task.description,
+      state: this.task.state ? this.task.state : 'todo',
+      deadline: this.task.deadline ? moment(this.task.deadline) : null,
       states: [
         {text: 'To Do', key: 'todo', color: '#769FE1'},
         {text: 'In-Progress', key: 'progress', color: '#EC3668'},
@@ -42,60 +44,53 @@ export default {
         {text: 'Canceled', key: 'canceled', color: '#FF0009'}
       ],
       editRunning: false,
-      placeholder: '',
-      placeholders: [
-        'What to do?', 'Type..', 'Everything ready? No..?', 'Roaw..'
-      ]
+      placeholders: ['What to do?', 'Type..', 'Everything ready? No..?', 'Roaw..'],
+      placeholder: ''
+    }
+  },
+  computed: {
+    deadlineDate: function () {
+      if (this.deadline != null) {
+        return moment(this.deadline).format('DD.MM.YYYY')
+      }
+      return ''
     }
   },
   created: function () {
-    this.id = this.task._id
-    this.subject = this.task.subject
-    this.description = this.task.description
-    this.state = this.task.state ? this.task.state : 'todo'
     this.placeholder = this.placeholders[Math.floor(Math.random() * this.placeholders.length)]
   },
-  components: {
-    Modal
-  },
-  mixins: [RichMediaDescription],
   mounted: function () {
-    this.changeState()
+    this.changeColor(this.$el.querySelector('.task-expand-state'))
   },
+  components: {
+    Modal,
+    Suggestions
+  },
+  mixins: [textSensibleCommands],
   methods: {
-    blurredTaskHeadline: function (e) {
-      if (e.target.value.length > 0) {
+    blurredTaskHeadline: function (ev) {
+      if (ev.target.value.length > 0) {
         if (typeof this.id === 'undefined') {
           this.saveTask()
           this.$emit('editBlurredNewTask')
         }
       }
     },
-    changeState: function (event) {
-      const stateDropdown = this.$el.querySelector('.task-expand-state')
-      const state = this.getState(stateDropdown.value)
+    changeColor: function (el) {
+      const options = this.states
+      let option = ''
 
-      stateDropdown.style.color = state.color
-      stateDropdown.style.borderColor = state.color
-    },
-    getState: function (stateKey) {
-      for (var i = 0; i < this.states.length; i++) {
-        if (this.states[i].key === stateKey) {
-          return this.states[i]
+      for (var i = 0; i < options.length; i++) {
+        if (options[i].key === el.value) {
+          option = options[i]
         }
       }
+
+      el.style.color = option.color
+      el.style.borderColor = option.color
     },
-    saveTask: function () {
-      const self = this
-      this.$http.post(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasks', {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state}).then((response) => {
-        console.log('created: ' + response.body._id)
-        self.id = response.body._id
-      }, (response) => {
-        console.log(response)
-      })
-    },
-    handleStateDataChanged: function () {
-      this.changeState()
+    handleStateDataChanged: function (ev) {
+      this.changeColor(ev.target)
       this.handleDataChanged()
     },
     handleDataChanged: function () {
@@ -104,12 +99,21 @@ export default {
         this.editRunning = true
         setTimeout(function () {
           self.editRunning = false
-          self.editTask()
+          self.updateTask()
         }, 1000)
       }
     },
-    editTask: function () {
-      this.$http.put(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/task/' + this.id, {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state}).then((response) => {
+    saveTask: function () {
+      const self = this
+      this.$http.post(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasks', {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state, deadline: this.deadline}).then((response) => {
+        console.log('created: ' + response.body._id)
+        self.id = response.body._id
+      }, (response) => {
+        console.log(response)
+      })
+    },
+    updateTask: function () {
+      this.$http.put(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/task/' + this.id, {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state, deadline: this.deadline}).then((response) => {
         console.log('saved: ' + response.body._id)
       }, (response) => {
         console.log(response)
@@ -122,22 +126,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="sass" scoped>
   @import "../scss/globals"
-
-  .suggestions
-    border-radius: 3px;
-    border: 1px solid $lightgrey;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    .suggestions-item
-      &:first-child a
-        padding-top: 0.7rem;
-      a
-        color: $grey;
-        display: block;
-        font-size: 0.9rem;
-        padding: 0 0.4rem 0.7rem;
-        text-decoration: none;
 
   .task
     border-bottom: 5px solid $lightgrey;

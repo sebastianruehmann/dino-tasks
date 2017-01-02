@@ -69,7 +69,7 @@ app.get(basePath + '/tasklists', function (req, res) {
     });
 })
 
-app.get(basePath + '/tasklist/:id', function (req, res) {
+app.get(basePath + '/tasklists/:id', function (req, res) {
     Tasklist.findOne({
             '_id': req.params.id
         }, function (err, response) {
@@ -90,7 +90,7 @@ app.get(basePath + '/tasklist/:id', function (req, res) {
         });
 })
 
-app.put(basePath + '/tasklist/:id', function (req, res) {
+app.put(basePath + '/tasklists/:id', function (req, res) {
     Tasklist.findByIdAndUpdate(req.params.id, {
         $set: {
             title: req.body.title,
@@ -132,7 +132,7 @@ app.post(basePath + '/tasks', function (req, res) {
     })
 })
 
-app.put(basePath + '/task/:id', function (req, res) {
+app.put(basePath + '/tasks/:id', function (req, res) {
     const query = {
         subject: req.body.subject,
         description: req.body.description,

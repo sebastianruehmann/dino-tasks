@@ -23,7 +23,7 @@ export default {
     }
   },
   created: function () {
-    this.resource = this.$resource(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasklist{/id}')
+    this.resource = this.$resource(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasklists{/id}')
 
     this.id = this.$route.params.id
     this.fetchData()

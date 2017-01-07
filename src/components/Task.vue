@@ -113,7 +113,7 @@ export default {
       })
     },
     updateTask: function () {
-      this.$http.put(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/task/' + this.id, {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state, deadline: this.deadline}).then((response) => {
+      this.$http.put(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasks/' + this.id, {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state, deadline: this.deadline}).then((response) => {
         console.log('saved: ' + response.body._id)
       }, (response) => {
         console.log(response)

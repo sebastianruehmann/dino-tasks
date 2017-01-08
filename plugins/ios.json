@@ -1,0 +1,21 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-barcodescanner": {
+            "PACKAGE_NAME": "com.dino.tasks"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.dino.tasks"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.dino.tasks"
+        }
+    },
+    "dependent_plugins": {}
+}

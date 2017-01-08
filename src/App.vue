@@ -6,13 +6,15 @@
           <img class="logo" src="./assets/logo.svg">
           <h1 class="title">{{ title }}</h1>
         </router-link>
+        <router-link to="/scanner">
+          Scanner
+        </router-link>
       </header>
       <!-- route outlet -->
       <!-- component matched by the route will render here -->
       <router-view></router-view>
     </div>
     <footer>
-      Made with ✏️ and 🖥 in HH
     </footer>
   </section>
 </template>

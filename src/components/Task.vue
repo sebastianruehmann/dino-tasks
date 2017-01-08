@@ -105,7 +105,7 @@ export default {
     },
     saveTask: function () {
       const self = this
-      this.$http.post(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasks', {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state, deadline: this.deadline}).then((response) => {
+      this.$http.post(window.apiRoot + '/tasks', {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state, deadline: this.deadline}).then((response) => {
         console.log('created: ' + response.body._id)
         self.id = response.body._id
       }, (response) => {
@@ -113,7 +113,7 @@ export default {
       })
     },
     updateTask: function () {
-      this.$http.put(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasks/' + this.id, {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state, deadline: this.deadline}).then((response) => {
+      this.$http.put(window.apiRoot + 'tasks/' + this.id, {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state, deadline: this.deadline}).then((response) => {
         console.log('saved: ' + response.body._id)
       }, (response) => {
         console.log(response)
@@ -138,6 +138,7 @@ export default {
       border-bottom: 1px solid $lightgrey;
       font-size: 1.1rem;
       color: $grey;
+      padding: 4px 0;
       width: 100%;
 
       &:focus

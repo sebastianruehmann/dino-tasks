@@ -1,8 +1,8 @@
 <template>
   <div class="dashboard">
-    <a class="button button-add button-full-width" href="/#/tasklist/add">
+    <router-link class="button button-add button-full-width" to="tasklist/add">
       +
-    </a>
+    </router-link>
     <p class="wrapped notice">Here you find an overview of all your created Tasklist:</p>
     <div class="tasklist-overview">
       <tasklist v-for="tasklist in tasklists" :tasklist="tasklist"></tasklist>
@@ -33,7 +33,7 @@ export default {
     fetchData: function () {
       const self = this
 
-      this.$http.get(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasklists').then((result) => {
+      this.$http.get(window.apiRoot + '/tasklists').then((result) => {
         self.tasklists = result.body
       }, (response) => {
         return response.text()

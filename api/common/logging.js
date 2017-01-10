@@ -29,7 +29,7 @@ function getLogger() {
 		},
 		transports: [
 			new (winston.transports.Console)({ name: 'console-log', colorize: true, silent: false, level: 'error'}),
-			new (winston.transports.File)({ name: 'file-log', filename: './logs/general.log' })
+			new (winston.transports.File)({ name: 'file-log', filename: './api/logs/general.log' })
 		]
 	});
 
@@ -37,7 +37,7 @@ function getLogger() {
 		loggerObject.add(winston.transports.File, {
 			exitOnError: true,
 			name: 'exceptions-log',
-			filename: './logs/error.log',
+			filename: './api/logs/error.log',
 			handleExceptions: false,
 			humanReadableUnhandledException: false,
 			level: 'error'
@@ -52,7 +52,7 @@ function getLogger() {
 	try {
 		fileSystem.accessSync('./api/logs/', fileSystem.W_OK);
 	} catch (e) {
-		fileSystem.mkdirSync('./api/logs/');
+		fileSystem.mkdirSync('./api/logs');
 	}
 
 	return loggerObject;

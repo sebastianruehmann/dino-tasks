@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const Task = require('models/task');
-const Tasklist = require('models/tasklist')
+const Tasklist = require('models/tasklist');
+const Revision = require('models/revision');
 
 var app = express();
 app.set('port', 5000);

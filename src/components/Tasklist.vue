@@ -3,13 +3,14 @@
     <h2 class="tasklist-title">{{ title }}</h2>
     <p class="tasklist-description">{{ description }}</p>
     <div class="bar bar-right">
-      <router-link :to="tasklistPrint" class="button button-print"><img src="./../assets/print.svg"></router-link>
+      <a @click.prevent="print" v-if="printDialog" class="button button-print"><img src="./../assets/print.svg"></a>
       <router-link :to="tasklistLink" class="button button-edit"><img src="./../assets/view.svg"></router-link>
     </div>
   </div>
 </template>
 
 <script>
+  import Printer from './../plugins/print'
   export default {
     name: 'tasklist',
     props: ['tasklist'],
@@ -18,7 +19,8 @@
         id: undefined,
         title: '',
         description: '',
-        tasklistLink: {}
+        tasklistLink: {},
+        printDialog: null
       }
     },
     created: function () {
@@ -29,9 +31,21 @@
         name: 'tasklist.edit',
         params: {id: this.id}
       }
-      this.tasklistPrint = {
-        name: 'tasklist.edit',
-        params: {id: this.id}
+
+      document.addEventListener('deviceready', () => {
+        this.printDialog = new Printer().$
+      })
+    },
+    methods: {
+      print: function () {
+        this.printDialog.check((isAvailable) => {
+          if (isAvailable) {
+            const page = document.body.innerHTML
+            this.printDialog.print(page)
+          } else {
+            window.modal('Service not available')
+          }
+        })
       }
     }
   }

@@ -23,13 +23,8 @@ export default {
     }
   },
   created: function () {
-    this.resource = this.$resource(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasklists{/id}')
-
     this.id = this.$route.params.id
     this.fetchData()
-  },
-  updated: function () {
-
   },
   watch: {
     '$route': 'fetchData'
@@ -46,7 +41,7 @@ export default {
       const self = this
 
       if (typeof this.id !== 'undefined') {
-        this.resource.get({id: this.$route.params.id}).then((response) => {
+        this.$http.get(window.apiRoot + '/tasklists/' + this.$route.params.id).then((response) => {
           return response.json()
         }, (response) => {
           return response.text()
@@ -65,7 +60,7 @@ export default {
     newTasklist: function () {
       const self = this
 
-      this.$http.post(window.location.protocol + '//' + window.location.hostname + ':5000/api/v1/tasklists', { title: this.title, description: 'Lorem Ipsum' }).then((response) => {
+      this.$http.post(window.apiRoot + '/tasklists', { title: this.title, description: 'Lorem Ipsum' }).then((response) => {
         self.$router.replace({name: 'tasklist.edit', params: { id: response.body._id }})
         self.id = response.body._id
         document.getElementsByClassName('task-subject')[0].focus()
@@ -74,7 +69,7 @@ export default {
       })
     },
     editTasklist: function () {
-      this.resource.update({id: this.id}, { title: this.title, description: 'Lorem Ipsum' }).then((response) => {
+      this.$http.put(window.apiRoot + '/tasklists/' + this.id, { title: this.title, description: 'Lorem Ipsum' }).then((response) => {
       }, (response) => {
         console.log(response)
       })
@@ -92,6 +87,7 @@ export default {
     margin-bottom: 1rem;
     font-size: 1.6rem;
     color: $grey;
+    padding: 4px 0;
     width: 100%;
 
     &:focus

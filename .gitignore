@@ -9,3 +9,4 @@ selenium-debug.log
 plugins/
 !src/plugins/
 platforms/
+api/logs/

@@ -1,124 +1,31 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+const express = require('express')
+const bodyParser = require('body-parser')
 
-const Task = require('models/task');
-const Tasklist = require('models/tasklist');
-const Revision = require('models/revision');
+const database = require('./common/database')
+const log = require('./common/logging')
+const settings = require('./settings')
 
-var app = express();
-app.set('port', 5000);
-var basePath = '/api/v1'
 
-app.use(bodyParser.json());
+const Revision = require('./models/revision')
 
-var dbHost = 'mongodb://localhost/dino-tasks';
-mongoose.connect(dbHost);
+const server = express();
+const base = '/api/v' + settings.version;
 
-app.listen(app.get('port'), function(){
-    console.log('Server up: http://localhost:' + app.get('port'));
+server.use(bodyParser.json());
+
+if (settings.allowCrossOrigin === true) {
+	log.info('enabling cross origin resource sharing for everyone');
+	server.use(require('cors')());
+}
+
+
+// Resource related Routes
+server.use(base + '/tasklists', require('./routes/tasklists/router.js'));
+// server.use(base + '/revisions', require('./routes/revisions/router.js'));
+server.use(base + '/tasks', require('./routes/tasks/router.js'));
+
+server.listen(process.env.PORT || settings.port, function(){
+  log.info('%s server started', settings.environment, { server: this.address(), environment: settings.environment });
 });
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-
-    if ( req.method === 'OPTIONS' ) {
-        res.end();
-    } else {
-        next();
-    }
-});
-
-app.get(basePath + '/tasklists', function (req, res) {
-    Tasklist.find({}, function (err, response) {
-        if( err ) throw err;
-
-        res.json(response);
-    });
-})
-
-app.get(basePath + '/tasklists/:id', function (req, res) {
-    Tasklist.findOne({
-            '_id': req.params.id
-        }, function (err, response) {
-            if( err ) throw err;
-
-            Task.find({
-                '_tasklistId': req.params.id
-            }).
-            select('-_tasklistId').
-            sort('subject').
-            exec(function (err, tasksResponse) {
-                response = response.toJSON();
-                response.tasks = tasksResponse;
-
-                res.json(response);
-            });
-
-        });
-})
-
-app.put(basePath + '/tasklists/:id', function (req, res) {
-    Tasklist.findByIdAndUpdate(req.params.id, {
-        $set: {
-            title: req.body.title,
-            description: req.body.description
-        }
-    }, function (err, response) {
-        if( err ) throw err;
-
-        res.json(response);
-    })
-})
-
-app.post(basePath + '/tasklists', function (req, res) {
-    var newTasklist = new Tasklist({
-        title: req.body.title,
-        description: req.body.description
-    });
-
-    newTasklist.save(function (err, response) {
-        if( err ) throw err;
-
-        res.json(response);
-    })
-})
-
-app.post(basePath + '/tasks', function (req, res) {
-    const newTask = new Task({
-        _tasklistId: req.body._tasklistId,
-        subject: req.body.subject ? req.body.subject : '',
-        description: req.body.description,
-        state: req.body.state,
-        deadline: req.body.deadline
-    });
-
-    newTask.save(function (err, response) {
-        if( err ) throw err;
-
-        res.json(response);
-    })
-})
-
-app.put(basePath + '/tasks/:id', function (req, res) {
-    const query = {
-        subject: req.body.subject,
-        description: req.body.description,
-        state: req.body.state,
-        deadline: req.body.deadline
-    }
-
-    if(typeof req.body._tasklistId !== 'undefined') {
-        query._tasklistId = req.body._tasklistId
-    }
-
-    Task.findByIdAndUpdate(req.params.id, {
-        $set: query
-    }, function (err, response) {
-        if( err ) throw err;
-
-        res.json(response);
-    })
-})
+module.exports = server;

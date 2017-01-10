@@ -10,6 +10,7 @@
 
 <script>
 import Scanner from './plugins/scanner'
+import shortid from 'shortid'
 
 export default {
   data: function () {
@@ -27,7 +28,7 @@ export default {
       }
     },
     checkID: function (val) {
-      return val.match(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)
+      return shortid.isValid(val)
     },
     scanner: function () {
       const barcodeScanner = new Scanner().$

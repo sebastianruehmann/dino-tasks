@@ -113,7 +113,7 @@ export default {
       })
     },
     updateTask: function () {
-      this.$http.put(window.apiRoot + 'tasks/' + this.id, {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state, deadline: this.deadline}).then((response) => {
+      this.$http.put(window.apiRoot + '/tasks/' + this.id, {_tasklistId: this.tasklistId, subject: this.subject, description: this.description, state: this.state, deadline: this.deadline}).then((response) => {
         console.log('saved: ' + response.body._id)
       }, (response) => {
         console.log(response)

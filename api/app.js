@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+const Task = require('models/task');
+const Tasklist = require('models/tasklist')
+
 var app = express();
 app.set('port', 5000);
 var basePath = '/api/v1'
@@ -10,40 +13,6 @@ app.use(bodyParser.json());
 
 var dbHost = 'mongodb://localhost/dino-tasks';
 mongoose.connect(dbHost);
-
-var TasklistSchema = mongoose.Schema({
-    title: {
-        type: String,
-        required: true
-    },
-    description: {
-        type: String
-    }
-});
-
-var TaskSchema = mongoose.Schema({
-    _tasklistId: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Tasklist'
-    },
-    subject: {
-        type: String,
-        required: true
-    },
-    description: {
-        type: String
-    },
-    state: {
-        type: String,
-        enum: ['todo', 'progress', 'complete', 'canceled']
-    },
-    deadline: {
-        type: Date
-    }
-})
-
-var Tasklist = mongoose.model('Tasklist', TasklistSchema);
-var Task = mongoose.model('Task', TaskSchema);
 
 app.listen(app.get('port'), function(){
     console.log('Server up: http://localhost:' + app.get('port'));
